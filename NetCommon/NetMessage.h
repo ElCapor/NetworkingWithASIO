@@ -72,5 +72,25 @@ namespace net
         }
          
     };
+
+    template <typename T>
+    class connection;
+    /*
+     * The server will have to manage multiple connections at the same time , so how will he know where did
+     * each message come from ? A solution is to make an owned message type , whose owner is a client connection
+     */
+    template <typename T>
+    struct owned_message
+    {
+        std::shared_ptr<connection<T>> remote = nullptr;
+        message<T> msg;
+
+        friend std::ostream& operator <<(std::ostream& os, const owner_message<T>& msg)
+        {
+            os << msg.msg;
+            return os;
+        }
+        
+    };
     
 }

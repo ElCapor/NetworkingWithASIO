@@ -159,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NetCommon.h" />
+    <ClInclude Include="NetConnection.h" />
     <ClInclude Include="NetIncludes.h" />
     <ClInclude Include="NetMessage.h" />
   </ItemGroup>
