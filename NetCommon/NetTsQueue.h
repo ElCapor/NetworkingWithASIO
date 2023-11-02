@@ -4,6 +4,7 @@
 #include <mutex>
 #include <mutex>
 #include <mutex>
+#include <mutex>
 
 #include "NetIncludes.h"
 
@@ -57,6 +58,18 @@ namespace net
             auto t = std::move(deq_Queue.front());
             // the standard implementation only removes it but doesnt return it
             deq_Queue.pop_front();
+            return t;
+        }
+
+        // remove the last item and return it from the back
+        T pop_back()
+        {
+            std::scoped_lock lock(mx_Queue);
+            // move the reference
+            auto t = std::move(deq_Queue.back());
+
+            deq_Queue.pop_back();
+
             return t;
         }
 
