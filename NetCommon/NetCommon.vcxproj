@@ -18,6 +18,17 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NetBase\NetClient.h" />
+    <ClInclude Include="NetBase\NetCommon.h" />
+    <ClInclude Include="NetBase\NetConnection.h" />
+    <ClInclude Include="NetBase\NetInclude.h" />
+    <ClInclude Include="NetBase\NetMessage.h" />
+    <ClInclude Include="NetBase\NetServer.h" />
+    <ClInclude Include="NetBase\NetTsQueue.h" />
+    <ClInclude Include="NetCustom\CustomMsgType.h" />
+    <ClInclude Include="NetCustom\NetCustom.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{17824D8F-4FFC-4750-B3DC-236D9E19CE79}</ProjectGuid>
@@ -154,18 +165,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="NetCommon.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="NetCommon.h" />
-    <ClInclude Include="NetConnection.h" />
-    <ClInclude Include="NetIncludes.h" />
-    <ClInclude Include="NetMessage.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="NetTsQueue.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
