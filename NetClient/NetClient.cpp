@@ -34,9 +34,9 @@ int main(int argc, char* argv[])
     {
         if (GetForegroundWindow() == GetConsoleWindow())
         {
-            key[0] = GetAsyncKeyState('1') & 0x8000;
-            key[1] = GetAsyncKeyState('2') & 0x8000;
-            key[2] = GetAsyncKeyState('3') & 0x8000;
+            key[0] = GetAsyncKeyState(VK_LEFT) & 0x8000;
+            key[1] = GetAsyncKeyState(VK_UP) & 0x8000;
+            key[2] = GetAsyncKeyState(VK_DOWN) & 0x8000;
         }
 
         if (key[0] && !old_key[0]) c.PingServer();
