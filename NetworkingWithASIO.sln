@@ -6,6 +6,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetCommon", "NetCommon\NetC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetClient", "NetClient\NetClient.vcxproj", "{024E2909-8430-4A6F-9611-7BD8B9F2512B}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetServer", "NetServer\NetServer.vcxproj", "{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -38,5 +40,13 @@ Global
 		{024E2909-8430-4A6F-9611-7BD8B9F2512B}.Release|Win32.Build.0 = Release|Win32
 		{024E2909-8430-4A6F-9611-7BD8B9F2512B}.Release|x64.ActiveCfg = Release|x64
 		{024E2909-8430-4A6F-9611-7BD8B9F2512B}.Release|x64.Build.0 = Release|x64
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Debug|Win32.Build.0 = Debug|Win32
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Debug|x64.ActiveCfg = Debug|x64
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Debug|x64.Build.0 = Debug|x64
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Release|Win32.ActiveCfg = Release|Win32
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Release|Win32.Build.0 = Release|Win32
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Release|x64.ActiveCfg = Release|x64
+		{CDCDAEED-11FB-4370-B41C-ED4B4E9C1587}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 EndGlobal
