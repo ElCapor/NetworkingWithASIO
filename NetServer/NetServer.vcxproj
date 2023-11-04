@@ -158,6 +158,12 @@
   <ItemGroup>
     <ClCompile Include="NetServer.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NetCommon\NetCommon.vcxproj">
+      <Project>{17824d8f-4ffc-4750-b3dc-236d9e19ce79}</Project>
+      <Name>NetCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
