@@ -1,3 +1,4 @@
+#include <unordered_map>
 #include <NetBase/NetInclude.h>
 #include <NetCustom/NetCustom.h>
 
@@ -13,7 +14,7 @@ protected:
     virtual bool OnClientConnect(std::shared_ptr<net::connection<CustomMsgTypes>> client)
     {
         net::message<CustomMsgTypes> msg;
-        msg.header.id = CustomMsgTypes::ServerAccept;
+        msg.header.id = CustomMsgTypes::ServerAuthenticate;
         client->Send(msg);
         return true;
     }
@@ -29,30 +30,21 @@ protected:
     {
         switch (msg.header.id)
         {
-        case CustomMsgTypes::ServerPing:
+        case CustomMsgTypes::MessagePackTest:
             {
-                std::cout << "[" << client->GetID() << "]: Server Ping\n";
-
-                // Simply bounce message back to client
-                client->Send(msg);
-            }
-            break;
-
-        case CustomMsgTypes::MessageAll:
-            {
-                std::cout << "[" << client->GetID() << "]: Message All\n";
-
-                // Construct a new message and send it to all clients
-                net::message<CustomMsgTypes> msg;
-                msg.header.id = CustomMsgTypes::ServerMessage;
-                msg << client->GetID();
-                MessageAllClients(msg, client);
+                std::cout << "Message pack test" << std::endl;
+                std::vector<uint8_t> vectorData;
+                msg >> vectorData;
+                // Create a vector and use the constructor with two iterators
+                auto auth = msgpack::unpack<AuthRequest>(vectorData);
+                std::cout << "Auth : " << auth.user << auth.pass << std::endl;
 
             }
             break;
         }
     }
-    
+
+public:
 };
 
 int main(int argc, char* argv[])

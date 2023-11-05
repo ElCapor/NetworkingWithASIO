@@ -64,6 +64,22 @@ namespace net
             return msg;
         }
 
+        // extension to push vectors
+        // it pushes the vector and it's size in the last
+        template <typename VectorType>
+        friend message<T>& operator << (message<T>& msg, const std::vector<VectorType>& vector)
+        {
+            static_assert(std::is_standard_layout_v<VectorType> && std::is_trivial_v<VectorType> , "VectorType is too complex to be pushed into vector");
+            assert(vector.size() > 0, "Can't push an empty vector");
+            for (int i=0; i < vector.size(); i++)
+            {
+                msg << vector[i];
+            }
+            msg << vector.size(); // push the size
+
+            return msg;
+        }
+        
         // Pulls any POD-like data form the message buffer
         template <typename DataType>
         friend message<T>& operator >>(message<T>& msg, DataType& data)
@@ -84,6 +100,25 @@ namespace net
             msg.header.size = msg.size();
 
             // Return the target message so it can be "chained"
+            return msg;
+        }
+
+        // extension to retrieve vectors
+        // it retrieve the vector it's size and then reverse it
+        template <typename VectorType>
+        friend message<T>& operator >> (message<T>& msg, std::vector<VectorType>& vector)
+        {
+            static_assert(std::is_standard_layout_v<VectorType> && std::is_trivial_v<VectorType> , "VectorType is too complex to be retrieved from vector");
+            //assert(vector.size() > 0, "Can't retrieve an empty vector");
+            size_t arraySize;
+            msg >> arraySize; // retrieve the size of the vector
+            for (int i=0; i < arraySize; i++)
+            {
+                VectorType temp;
+                msg >> temp;
+                vector.push_back(temp);
+            }
+            std::reverse(vector.begin(), vector.end()); // since it's a stack you have to do this
             return msg;
         }
     };

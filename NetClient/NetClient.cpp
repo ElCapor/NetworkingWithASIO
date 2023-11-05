@@ -1,7 +1,6 @@
 #include <NetBase/NetInclude.h>
 #include <NetCustom/NetCustom.h>
 
-
 class SimpleClient : public net::client_interface<CustomMsgTypes>
 {
 public:
@@ -20,38 +19,16 @@ public:
         msg.header.id = CustomMsgTypes::MessageAll;
         Send(msg);
     }
-};
 
-int main(int argc, char* argv[])
-{
-    SimpleClient c;
-    c.Connect("127.0.0.1", 62899);
-    bool key[3] = { false, false, false };
-    bool old_key[3] = { false, false, false };
-
-    bool bQuit = false;
-    while (!bQuit)
+    void ProcessPackets()
     {
-        if (GetForegroundWindow() == GetConsoleWindow())
+        if (IsConnected())
         {
-            key[0] = GetAsyncKeyState('1') & 0x8000;
-            key[1] = GetAsyncKeyState('2') & 0x8000;
-            key[2] = GetAsyncKeyState('3') & 0x8000;
-        }
-
-        if (key[0] && !old_key[0]) c.PingServer();
-        if (key[1] && !old_key[1]) c.MessageAll();
-        if (key[2] && !old_key[2]) bQuit = true;
-
-        for (int i = 0; i < 3; i++) old_key[i] = key[i];
-
-        if (c.IsConnected())
-        {
-            if (!c.Incoming().empty())
+            if (!Incoming().empty())
             {
 
 
-                auto msg = c.Incoming().pop_front().msg;
+                auto msg = Incoming().pop_front().msg;
 
                 switch (msg.header.id)
                 {
@@ -81,15 +58,49 @@ int main(int argc, char* argv[])
                         std::cout << "Hello from [" << clientID << "]\n";
                     }
                     break;
+                case CustomMsgTypes::ServerAuthenticate:
+                    {
+                        std::cout << "We must auth with server !" << std::endl;
+                        AskForUserPass();
+                    }
+                    break;
                 }
             }
         }
-        else
-        {
-            std::cout << "Server Down\n";
-            bQuit = true;
-        }
+    }
 
+    void AskForUserPass()
+    {
+        std::string user;
+        std::string pass;
+        std::cout << "User : ";
+        std::cin >> user;
+        std::cout << std::endl;
+        std::cout << "Pass : ";
+        std::cin >> pass;
+        std::cout << std::endl;
+
+        net::message<CustomMsgTypes> msg;
+        msg.header.id = CustomMsgTypes::MessagePackTest;
+        AuthRequest req;
+        req.user =user;
+        req.pass = pass;
+        auto data = msgpack::pack(req);
+        
+        msg << data;
+        Send(msg);
+    }
+
+
+};
+
+int main(int argc, char* argv[])
+{
+    SimpleClient c;
+    c.Connect("127.0.0.1", 62899);
+    while (true)
+    {
+        c.ProcessPackets();
     }
     return 0;
 }

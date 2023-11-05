@@ -6,3 +6,4 @@
 #include "NetClient.h"
 #include "NetServer.h"
 #include "NetConnection.h"
+#include "MessagePack.h"

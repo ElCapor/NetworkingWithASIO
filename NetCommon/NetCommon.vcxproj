@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NetBase\MessagePack.h" />
     <ClInclude Include="NetBase\NetClient.h" />
     <ClInclude Include="NetBase\NetCommon.h" />
     <ClInclude Include="NetBase\NetConnection.h" />
@@ -28,6 +29,9 @@
     <ClInclude Include="NetBase\NetTsQueue.h" />
     <ClInclude Include="NetCustom\CustomMsgType.h" />
     <ClInclude Include="NetCustom\NetCustom.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="NetCommon.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
