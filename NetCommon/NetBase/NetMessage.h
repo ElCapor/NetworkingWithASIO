@@ -107,23 +107,40 @@ namespace net
         template <typename DataType>
         friend message<T>& operator >>(message<T>& msg, DataType& data)
         {
-            // Check that the type of the data being pushed is trivially copyable
-            static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pulled from vector");
+            if (std::is_standard_layout_v<DataType>)
+            {
+                // Cache the location towards the end of the vector where the pulled data starts
+                size_t i = msg.body.size() - sizeof(DataType);
 
-            // Cache the location towards the end of the vector where the pulled data starts
-            size_t i = msg.body.size() - sizeof(DataType);
+                // Physically copy the data from the vector into the user variable
+                std::memcpy(&data, msg.body.data() + i, sizeof(DataType));
 
-            // Physically copy the data from the vector into the user variable
-            std::memcpy(&data, msg.body.data() + i, sizeof(DataType));
+                // Shrink the vector to remove read bytes, and reset end position
+                msg.body.resize(i);
 
-            // Shrink the vector to remove read bytes, and reset end position
-            msg.body.resize(i);
+                // Recalculate the message size
+                msg.header.size = msg.size();
 
-            // Recalculate the message size
-            msg.header.size = msg.size();
-
-            // Return the target message so it can be "chained"
-            return msg;
+                // Return the target message so it can be "chained"
+                return msg;
+            }
+            else
+            {
+                try
+                {
+                    std::error_code ec;
+                    std::vector<uint8_t> complexBytes;
+                    msg >> complexBytes; // this should trigger vector operator
+                    auto data_unpacked = msgpack::unpack<DataType>(complexBytes,ec);
+                    data = data_unpacked;
+                    return msg;
+                }
+                catch (std::exception& e)
+                {
+                    std::cout << "[ERROR] Unpacking complex data type failed " << e.what() << std::endl;
+                }
+            }
+            
         }
 
         // extension to retrieve vectors
