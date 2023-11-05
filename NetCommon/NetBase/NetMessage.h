@@ -1,6 +1,13 @@
 #pragma once
+#include "MessagePack.h"
 #include "NetCommon.h"
+/*
+ Changes made by myself : ElCapor
 
+ Added support for vectors
+ Using MessagePack as a backend for complicated data types
+ (Maybe i should use it for trivial too ?)
+ */
 namespace net
 {
     // Message Header is sent at start of all messages. The template allows us
@@ -45,23 +52,39 @@ namespace net
         template <typename DataType>
         friend message<T>& operator <<(message<T>& msg, const DataType& data)
         {
-            // Check that the type of the data being pushed is trivially copyable
-            static_assert(std::is_standard_layout<DataType>::value, "Data is too complex to be pushed into vector");
+            if (std::is_standard_layout_v<DataType>)
+            {
+                // Cache current size of vector, as this will be the point we insert the data
+                size_t i = msg.body.size();
 
-            // Cache current size of vector, as this will be the point we insert the data
-            size_t i = msg.body.size();
+                // Resize the vector by the size of the data being pushed
+                msg.body.resize(msg.body.size() + sizeof(DataType));
 
-            // Resize the vector by the size of the data being pushed
-            msg.body.resize(msg.body.size() + sizeof(DataType));
+                // Physically copy the data into the newly allocated vector space
+                std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
 
-            // Physically copy the data into the newly allocated vector space
-            std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
+                // Recalculate the message size
+                msg.header.size = msg.size();
 
-            // Recalculate the message size
-            msg.header.size = msg.size();
-
-            // Return the target message so it can be "chained"
-            return msg;
+                // Return the target message so it can be "chained"
+                return msg;
+            }
+            else
+            {
+                std::cout << "[Warning] Complex data type used , resolving with MessagePack" << std::endl;
+                try
+                {
+                    auto packed_data = msgpack::pack(data);
+                    msg << data; // send the bytes of vector inside
+                    return msg;
+                } catch (const std::exception& e)
+                {
+                    std::cout << "[ERROR] packing complex data type " << e.what() << std::endl;
+                    return msg; // return the unchanged msg
+                }
+                
+            }
+            
         }
 
         // extension to push vectors
