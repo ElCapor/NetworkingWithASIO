@@ -87,7 +87,7 @@ public:
         req.pass = pass;
         auto data = msgpack::pack(req);
         
-        msg << data;
+        msg << req;
         Send(msg);
     }
 
